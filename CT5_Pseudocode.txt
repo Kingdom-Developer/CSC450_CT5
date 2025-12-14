@@ -1,0 +1,79 @@
+/*
+ * Method to create new file that has all characters reversed from the input file
+ */
+METHOD int reverseFile(string originalFile, string reverseFile)
+    // Create input and output streams for file to read and file to write to
+    OPEN originalFile FOR READING INTO fileToReverse
+    OPEN reversedFile FOR WRITING INTO reversed
+
+    // Ensure original file opened correctly
+    IF fileToReverse IS NOT OPEN THEN
+        OUTPUT "Unable to open original file."
+        RETURN 1
+    END IF
+
+    // Ensure new reverse file opened correctly
+    IF reversedFile IS NOT OPEN THEN
+        OUTPUT "Unable to open new file."
+        RETURN 2
+    END IF
+
+    // Declare temporary variable to hold each line of original file
+    DECLARE string line
+
+    // Copy each line from file and write it in reverse to new file
+    WHILE READ line from fileToReverse DO
+        // Check if line is blank and start newline
+        IF line IS EMPTY THEN
+            WRITE '\n' TO reversedFile
+            CONTINUE
+        END IF
+
+        // Iterate through each line, starting at the end and writing to new file
+        FOR i FROM (length of line - 1) DOWN TO 0
+            WRITE line[i] TO reversedFile
+        END FOR
+    
+        // End each line with newline
+        WRITE '\n' TO reversedFile
+    END WHILE    
+    
+    // Close both file streams
+    CLOSE fileToReverse
+    CLOSE reversedFile
+        
+    RETURN 0
+END METHOD
+
+/*
+ * Demonstrates appending user input to end of a file and
+ * calls on reverseFile method to create new file with reversed
+ * characters.
+ */
+MAIN METHOD
+    DECLARE string userInput
+
+    // Create output file stream
+    OPEN "CSC450_CT5_mod5.txt" FOR APPENDING INTO fileToUpdate
+
+    // Check if file opened correctly
+    IF fileToUpdate IS NOT OPEN THEN
+        OUTPUT "Unable to open file for appending."
+        RETURN 1;
+    END IF
+
+    // Prompt user for input and store to variable
+    OUTPUT "Enter text to add to file: "
+    READ line FROM cin INTO userInput
+    
+    // Append user input to end of file
+    WRITE userInput TO fileToUpdate
+
+    // Close file stream
+    CLOSE fileToUpdate
+
+    // Call on method to create a copy of a file with reversed text
+    CALL reverseFile("CSC450_CT5_mod5.txt", "CSC450-mod5-reverse.txt")
+
+    RETURN 0
+END METHOD

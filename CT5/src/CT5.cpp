@@ -35,7 +35,7 @@ int reverseFile(string originalFile, string reverseFile) {
 	// Declare temporary variable to hold each line of original file
 	string line;
 
-	// Copy each line as elements in vector
+	// Copy each line from file and write it in reverse to new file
 	while (getline(fileToReverse, line)) {
 		// Check if line is blank and start newline
 		if (line.empty()) {
@@ -47,6 +47,7 @@ int reverseFile(string originalFile, string reverseFile) {
 		for (int i = (int)line.size() - 1; i >= 0; i--) {
 			reversedFile << line[i];
 		}
+
 		// End each line with newline
 		reversedFile << '\n';
 	}
@@ -71,7 +72,7 @@ int main() {
 
 	// Check if file opened correctly
 	if (!fileToUpdate.is_open()) {
-		cout << "Unable to open file.";
+		cout << "Unable to open file for appending.";
 		return 1;
 	}
 
@@ -79,6 +80,7 @@ int main() {
 	cout << "Enter text to add to file: ";
 	getline(cin, userInput);
 
+	// Append user input to end of file
 	fileToUpdate << userInput << endl;
 
 	// Close file stream
